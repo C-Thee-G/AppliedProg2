@@ -1,0 +1,31 @@
+name: Database Migrations
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Migrations/**'
+      - 'Models/**'
+
+jobs:
+  migrate-database:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install EF Tool
+      run: dotnet tool install --global dotnet-ef
+
+    - name: Run migrations
+      run: |
+        dotnet ef database update --project AppliedProg2/AppliedProg2.csproj --connection "${{ secrets.PRODUCTION_DB_CONNECTION }}"
+      env:
+        ConnectionStrings__DefaultConnection: ${{ secrets.PRODUCTION_DB_CONNECTION }}

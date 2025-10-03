@@ -1,0 +1,549 @@
+﻿@model AppliedProg2.Models.VolunteerViewModel
+@{
+    ViewData["Title"] = "Volunteer Registration";
+}
+
+@section Styles {
+    <style>
+        :root {
+            --primary-black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --light-gray: #2a2a2a;
+            --accent-orange: #ff8c00;
+            --light-orange: #ffa500;
+            --white: #ffffff;
+            --text-gray: #d1d5db;
+            --urgent-red: #dc2626;
+            --success-green: #10b981;
+            --card-bg: rgba(30, 30, 30, 0.95);
+            --form-bg: rgba(40, 40, 40, 0.8);
+        }
+
+        .volunteer-registration-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.1) 0%, rgba(10, 10, 10, 0.9) 100%), url('https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            padding: 40px 20px;
+        }
+
+        .registration-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 140, 0, 0.2);
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--dark-gray) 0%, rgba(255, 140, 0, 0.3) 100%);
+            color: var(--white);
+            padding: 2.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 140, 0, 0.3);
+        }
+
+            .card-header h4 {
+                font-weight: 700;
+                margin: 0;
+                font-size: 2rem;
+                letter-spacing: -0.5px;
+            }
+
+            .card-header i {
+                margin-right: 12px;
+                font-size: 1.8rem;
+                color: var(--accent-orange);
+            }
+
+        .card-body {
+            padding: 3rem;
+        }
+
+        .registration-decoration {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: var(--form-bg);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 140, 0, 0.2);
+        }
+
+        .decoration-icons {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-orange);
+        }
+
+            .decoration-icons i {
+                margin: 0 8px;
+                opacity: 0.9;
+            }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--light-orange);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+            .form-label i {
+                margin-right: 10px;
+                font-size: 1.2rem;
+                width: 20px;
+                text-align: center;
+            }
+
+            .form-label.required::after {
+                content: ' *';
+                color: var(--urgent-red);
+            }
+
+        .form-control {
+            border: 2px solid rgba(255, 140, 0, 0.3);
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--form-bg);
+            color: var(--white);
+            backdrop-filter: blur(10px);
+        }
+
+            .form-control:focus {
+                border-color: var(--accent-orange);
+                box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.2);
+                background: var(--form-bg);
+                color: var(--white);
+            }
+
+            .form-control::placeholder {
+                color: var(--text-gray);
+                opacity: 0.6;
+            }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.5;
+        }
+
+        .form-select {
+            appearance: none;
+            background: radial-gradient(circle at 20% 80%, rgba(255, 123, 0, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 123, 0, 0.1) 0%, transparent 50%), url('https://i.pinimg.com/1200x/59/b1/03/59b10355a3cc4e6de0986700b7ed4017.jpg');
+            background-position: right 18px center;
+            background-repeat: no-repeat;
+            background-size: 16px 12px;
+        }
+
+        .form-check {
+            margin-bottom: 1.5rem;
+            padding-left: 3rem;
+        }
+
+        .form-check-input {
+            width: 1.3em;
+            height: 1.3em;
+            margin-left: -3rem;
+            margin-top: 0.1em;
+            border: 2px solid rgba(255, 140, 0, 0.4);
+            border-radius: 6px;
+            background-color: var(--form-bg);
+        }
+
+            .form-check-input:checked {
+                background-color: var(--accent-orange);
+                border-color: var(--accent-orange);
+            }
+
+            .form-check-input:focus {
+                border-color: var(--accent-orange);
+                box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.2);
+            }
+
+        .form-check-label {
+            color: var(--text-gray);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            font-size: 1.05rem;
+        }
+
+            .form-check-label i {
+                margin-right: 10px;
+                font-size: 1.1rem;
+                color: var(--accent-orange);
+            }
+
+        .btn-register {
+            background: linear-gradient(135deg, var(--accent-orange), #e67e22);
+            border: none;
+            border-radius: 10px;
+            padding: 16px 35px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 140, 0, 0.4);
+            color: var(--white);
+            letter-spacing: 0.5px;
+        }
+
+            .btn-register:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 25px rgba(255, 140, 0, 0.5);
+                background: linear-gradient(135deg, #e67e22, var(--accent-orange));
+            }
+
+        .btn-cancel {
+            background: transparent;
+            border: 2px solid var(--text-gray);
+            border-radius: 10px;
+            padding: 16px 35px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            color: var(--text-gray);
+        }
+
+            .btn-cancel:hover {
+                transform: translateY(-3px);
+                background: var(--text-gray);
+                color: var(--primary-black);
+                border-color: var(--text-gray);
+            }
+
+            .btn-register i, .btn-cancel i {
+                margin-right: 10px;
+            }
+
+        .text-danger {
+            color: var(--urgent-red) !important;
+            font-size: 0.9rem;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+            .text-danger i {
+                margin-right: 6px;
+            }
+
+        .alert-danger {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(185, 28, 28, 0.05));
+            border: 1px solid var(--urgent-red);
+            border-radius: 10px;
+            color: var(--urgent-red);
+            font-weight: 600;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(255, 165, 0, 0.05));
+            border: 1px solid var(--accent-orange);
+            border-radius: 10px;
+            color: var(--text-gray);
+            font-weight: 500;
+            padding: 1.75rem;
+            margin: 2.5rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+            .alert-info h6 {
+                color: var(--light-orange);
+                font-weight: 700;
+                margin-bottom: 0.75rem;
+                font-size: 1.1rem;
+            }
+
+        .validation-summary-errors {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(185, 28, 28, 0.05));
+            border: 1px solid var(--urgent-red);
+            border-radius: 10px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            color: var(--urgent-red);
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+            .validation-summary-errors ul {
+                margin: 0;
+                padding-left: 1.25rem;
+            }
+
+        .form-hint {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            opacity: 0.8;
+        }
+
+            .form-hint i {
+                margin-right: 6px;
+                width: 14px;
+                text-align: center;
+            }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2.5rem;
+        }
+
+        media (max-width: 768px) {
+            .volunteer-registration-container
+
+        {
+            padding: 20px 15px;
+        }
+
+        .card-body {
+            padding: 2rem 1.5rem;
+        }
+
+        .card-header {
+            padding: 2rem 1.5rem;
+        }
+
+            .card-header h4 {
+                font-size: 1.6rem;
+            }
+
+        .btn-group {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn-register, .btn-cancel {
+            width: 100%;
+            padding: 14px 25px;
+        }
+
+        .decoration-icons i {
+            margin: 0 5px;
+            font-size: 2rem;
+        }
+
+        }
+
+        .btn-register.loading {
+            position: relative;
+            color: transparent;
+        }
+
+            .btn-register.loading::after {
+                content: '';
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                top: 50%;
+                left: 50%;
+                margin-left: -10px;
+                margin-top: -10px;
+                border: 2px solid var(--white);
+                border-radius: 50%;
+                border-top-color: transparent;
+                animation: spin 1s linear infinite;
+            }
+
+        keyframes spin {
+            to
+
+        {
+            transform: rotate(360deg);
+        }
+
+        }
+    </style>
+}
+
+<div class="volunteer-registration-container">
+    <div class="registration-card">
+        <div class="card-header">
+            <h4><i class="fas fa-hands-helping"></i> Join Our Volunteer Team</h4>
+        </div>
+        <div class="card-body">
+            <div class="registration-decoration">
+                <div class="decoration-icons">
+                    <i class="fas fa-handshake"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-heart"></i>
+                    <i class="fas fa-users"></i>
+                </div>
+                <p class="mb-0" style="color: var(--text-gray); font-size: 1.1rem;">
+                    <strong style="color: var(--light-orange);">Become a Hero!</strong> Your skills and time can make a real difference in people's lives during emergencies.
+                </p>
+            </div>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <form asp-action="Register" method="post" id="volunteerForm">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="text-danger validation-summary-errors"></div>
+
+                <!-- Skills -->
+                <div class="form-group">
+                    <label asp-for="Skills" class="form-label required">
+                        <i class="fas fa-tools"></i>Your Skills & Expertise
+                    </label>
+                    <textarea asp-for="Skills" class="form-control" rows="4"
+                              placeholder="List your skills and expertise that could help during emergencies (e.g., First Aid, Construction, Counseling, Logistics, Cooking, Language Translation, Technical Skills, etc.)"></textarea>
+                    <span asp-validation-for="Skills" class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                    <div class="form-hint"><i class="fas fa-lightbulb"></i>Be specific about your abilities - every skill is valuable!</div>
+                </div>
+
+                <!-- Availability -->
+                <div class="form-group">
+                    <label asp-for="Availability" class="form-label required">
+                        <i class="fas fa-calendar-alt"></i>Availability
+                    </label>
+                    <select asp-for="Availability" class="form-control form-select">
+                        <option value="">Select Your Availability</option>
+                        <option value="Weekdays">Weekdays (Mon-Fri)</option>
+                        <option value="Weekends">Weekends (Sat-Sun)</option>
+                        <option value="Evenings">Evenings Only</option>
+                        <option value="Flexible">Flexible - Anytime</option>
+                        <option value="Emergency Only">Emergency Response Only</option>
+                    </select>
+                    <span asp-validation-for="Availability" class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                    <div class="form-hint"><i class="fas fa-clock"></i>When are you typically available to help?</div>
+                </div>
+
+                <!-- Preferred Location -->
+                <div class="form-group">
+                    <label asp-for="PreferredLocation" class="form-label required">
+                        <i class="fas fa-map-marker-alt"></i>Preferred Location
+                    </label>
+                    <input asp-for="PreferredLocation" class="form-control"
+                           placeholder="City, region, or area where you prefer to volunteer" list="locationSuggestions" />
+                    <datalist id="locationSuggestions">
+                        <option value="Local Community" />
+                        <option value="Regional" />
+                        <option value="Anywhere Needed" />
+                        <option value="Within 50km radius" />
+                        <option value="Specific disaster areas" />
+                    </datalist>
+                    <span asp-validation-for="PreferredLocation" class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                    <div class="form-hint"><i class="fas fa-location-arrow"></i>Where would you be willing to volunteer?</div>
+                </div>
+
+                <!-- Emergency Contact -->
+                <div class="form-group">
+                    <label asp-for="EmergencyContact" class="form-label required">
+                        <i class="fas fa-phone-alt"></i>Emergency Contact
+                    </label>
+                    <input asp-for="EmergencyContact" class="form-control"
+                           placeholder="Name and phone number of emergency contact person" />
+                    <span asp-validation-for="EmergencyContact" class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                    <div class="form-hint"><i class="fas fa-shield-alt"></i>This will only be used in case of emergency during volunteer activities</div>
+                </div>
+
+                <!-- Transportation -->
+                <div class="form-check">
+                    <input asp-for="HasTransportation" class="form-check-input" />
+                    <label asp-for="HasTransportation" class="form-check-label">
+                        <i class="fas fa-car"></i>I have reliable transportation and can travel to volunteer locations
+                    </label>
+                </div>
+
+                <!-- Information Alert -->
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-shield-alt"></i> Volunteer Commitment</h6>
+                    <small>
+                        By registering as a volunteer, you join our community of heroes ready to help during disasters.
+                        You'll only be contacted for efforts matching your skills and availability.
+                        <strong style="color: var(--light-orange);">Your privacy is protected</strong> - information is used solely for coordinating relief efforts.
+                        Training and support will be provided as needed.
+                    </small>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="btn-group">
+                    <a asp-action="Index" class="btn btn-cancel">
+                        <i class="fas fa-arrow-left"></i> Back to Safety
+                    </a>
+                    <button type="submit" class="btn btn-register" id="registerButton">
+                        <i class="fas fa-user-check"></i> Join Volunteer Team
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Add loading state to button on form submit
+        document.getElementById('volunteerForm').addEventListener('submit', function () {
+            const button = document.getElementById('registerButton');
+            button.classList.add('loading');
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-user-check"></i> Joining Volunteer Team...';
+        });
+
+        // Skills character counter
+        const skillsTextarea = document.querySelector('textarea[name="Skills"]');
+        if (skillsTextarea) {
+            const counter = document.createElement('div');
+            counter.className = 'form-hint';
+            counter.style.textAlign = 'right';
+            skillsTextarea.parentElement.appendChild(counter);
+
+            skillsTextarea.addEventListener('input', function () {
+                const count = this.value.length;
+                counter.innerHTML = `<i class="fas fa-text-height"></i>${count} characters`;
+
+                if (count < 20) {
+                    counter.style.color = 'var(--urgent-red)';
+                } else if (count < 50) {
+                    counter.style.color = 'var(--accent-orange)';
+                } else {
+                    counter.style.color = 'var(--success-green)';
+                }
+            });
+
+            // Trigger initial count
+            skillsTextarea.dispatchEvent(new Event('input'));
+        }
+
+        // Transportation checkbox enhancement
+        const transportCheckbox = document.querySelector('input[name="HasTransportation"]');
+        if (transportCheckbox) {
+            transportCheckbox.addEventListener('change', function () {
+                const label = this.closest('.form-check').querySelector('.form-check-label');
+                if (this.checked) {
+                    label.style.color = 'var(--light-orange)';
+                    label.style.fontWeight = '600';
+                } else {
+                    label.style.color = 'var(--text-gray)';
+                    label.style.fontWeight = '500';
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,711 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Donations</title>
+    <style>
+        :root {
+            --primary-black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --light-gray: #2a2a2a;
+            --accent-orange: #ff6b35;
+            --light-orange: #ff8e53;
+            --bright-orange: #ff5722;
+            --white: #ffffff;
+            --off-white: #f5f5f5;
+            --text-gray: #d1d5db;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+            --info-blue: #3b82f6;
+            --error-red: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-black);
+            color: var(--white);
+        }
+
+        .donations-container {
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%), var(--primary-black);
+            padding: 20px 0;
+            color: var(--white);
+        }
+
+        .page-header {
+            background: var(--light-gray);
+            color: var(--white);
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid var(--accent-orange);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-new-donation {
+            background: linear-gradient(135deg, var(--accent-orange), var(--light-orange));
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            color: var(--primary-black);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+            .btn-new-donation:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+                background: linear-gradient(135deg, var(--light-orange), var(--accent-orange));
+                color: var(--primary-black);
+            }
+
+        .donation-card {
+            border: 1px solid var(--light-gray);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            background: var(--dark-gray);
+            overflow: hidden;
+            border-left: 4px solid var(--accent-orange);
+            height: 100%;
+        }
+
+            .donation-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+                border-left-color: var(--light-orange);
+            }
+
+        .card-header {
+            background: var(--light-gray);
+            border-bottom: 1px solid var(--light-gray);
+            padding: 1rem 1.25rem;
+        }
+
+        .donation-badge {
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            background: var(--dark-gray);
+        }
+
+        .card-title {
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .donation-details {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+            .donation-details strong {
+                color: var(--off-white);
+            }
+
+        .card-footer {
+            background: var(--light-gray);
+            border-top: 1px solid var(--light-gray);
+            padding: 1rem 1.25rem;
+        }
+
+        .status-badge {
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .special-instructions {
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px solid var(--accent-orange);
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        .empty-state {
+            background: var(--dark-gray);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            margin: 2rem 0;
+            border: 1px solid var(--light-gray);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--accent-orange);
+            margin-bottom: 1rem;
+        }
+
+        .summary-card {
+            background: var(--light-gray);
+            border: 1px solid var(--accent-orange);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .summary-title {
+            color: var(--white);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+            .summary-title i {
+                margin-right: 10px;
+                color: var(--accent-orange);
+            }
+
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 0 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-top: 0.5rem;
+        }
+
+        .donation-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .impact-alert {
+            background: var(--light-gray);
+            border: 1px solid var(--accent-orange);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        /* Animation for new cards */
+        keyframes fadeInUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .donation-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Responsive design */
+        media (max-width: 768px) {
+            .page-header
+
+        {
+            padding: 2rem 0;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .btn-new-donation {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .summary-stats {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .empty-state {
+            padding: 2rem 1rem;
+        }
+
+        }
+
+        /* Staggered animation for cards */
+        .donation-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .donation-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .donation-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .donation-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .donation-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .donation-card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        .text-muted {
+            color: var(--text-gray) !important;
+        }
+
+        .text-primary {
+            color: var(--accent-orange) !important;
+        }
+
+        .text-warning {
+            color: var(--warning-orange) !important;
+        }
+
+        .bg-warning {
+            background-color: var(--warning-orange) !important;
+            color: var(--primary-black) !important;
+        }
+
+        .bg-info {
+            background-color: var(--info-blue) !important;
+            color: var(--white) !important;
+        }
+
+        .bg-danger {
+            background-color: var(--error-red) !important;
+            color: var(--white) !important;
+        }
+
+        .bg-success {
+            background-color: var(--success-green) !important;
+            color: var(--white) !important;
+        }
+
+        .bg-secondary {
+            background-color: var(--light-gray) !important;
+            color: var(--white) !important;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success-green);
+            color: var(--success-green);
+        }
+
+        /* Container and grid layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+
+        .col-md-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+            padding: 0 10px;
+        }
+
+        .col-lg-4 {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+            padding: 0 10px;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-0 {
+            margin-bottom: 0;
+        }
+
+        .fw-bold {
+            font-weight: 700;
+        }
+
+        .display-5 {
+            font-size: 2.5rem;
+        }
+
+        .lead {
+            font-size: 1.25rem;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .me-1 {
+            margin-right: 0.25rem;
+        }
+
+        .me-2 {
+            margin-right: 0.5rem;
+        }
+
+        .text-dark {
+            color: var(--primary-black) !important;
+        }
+
+        .text-white {
+            color: var(--white) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="donations-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container">
+                <div class="header-content d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <h1 class="fw-bold display-5 mb-2">
+                            <span>❤️</span> All Donations
+                        </h1>
+                        <p class="lead mb-0" style="color: var(--text-gray);">Celebrating the generosity that makes a difference</p>
+                    </div>
+                    <a href="#" class="btn btn-new-donation">
+                        <span>➕</span> Make New Donation
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Donations Grid -->
+            <div class="row">
+                <!-- Donation Card 1 -->
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="donation-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span class="donation-badge bg-success text-white">
+                                <span class="donation-icon"><span>💰</span></span>
+                                Money
+                            </span>
+                            <small class="fw-bold" style="color: var(--text-gray);">
+                                <span>📅</span> Dec 15, 2023
+                            </small>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">Emergency Relief Fund</h6>
+                            <div class="donation-details">
+                                <p class="mb-2">
+                                    <strong><span>📦</span>Quantity:</strong>
+                                    <span class="fw-bold" style="color: var(--accent-orange);">$500 USD</span>
+                                </p>
+                                <p class="mb-2">
+                                    <strong><span>📍</span>Target Area:</strong>
+                                    <span>Flood Relief</span>
+                                </p>
+                                <p class="mb-0">
+                                    <strong><span>👤</span>Donor:</strong>
+                                    <span>John Smith</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="status-badge bg-success text-white">
+                                    <span>✅</span> Distributed
+                                </span>
+                                <small style="color: var(--text-gray);">
+                                    <span>🕒</span> 10:30 AM
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donation Card 2 -->
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="donation-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span class="donation-badge bg-warning text-dark">
+                                <span class="donation-icon"><span>🍽️</span></span>
+                                Food
+                            </span>
+                            <small class="fw-bold" style="color: var(--text-gray);">
+                                <span>📅</span> Dec 12, 2023
+                            </small>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">Canned Goods and Non-Perishables</h6>
+                            <div class="donation-details">
+                                <p class="mb-2">
+                                    <strong><span>📦</span>Quantity:</strong>
+                                    <span class="fw-bold" style="color: var(--accent-orange);">50 boxes</span>
+                                </p>
+                                <p class="mb-2">
+                                    <strong><span>📍</span>Target Area:</strong>
+                                    <span>Local Shelter</span>
+                                </p>
+                                <p class="mb-0">
+                                    <strong><span>👤</span>Donor:</strong>
+                                    <span>Sarah Johnson</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="status-badge bg-info text-white">
+                                    <span>📦</span> Received
+                                </span>
+                                <small style="color: var(--text-gray);">
+                                    <span>🕒</span> 02:15 PM
+                                </small>
+                            </div>
+                            <div class="special-instructions">
+                                <span>ℹ️</span>
+                                <small>Requires refrigeration for dairy items</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donation Card 3 -->
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="donation-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span class="donation-badge bg-info text-white">
+                                <span class="donation-icon"><span>👕</span></span>
+                                Clothing
+                            </span>
+                            <small class="fw-bold" style="color: var(--text-gray);">
+                                <span>📅</span> Dec 10, 2023
+                            </small>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">Winter Clothing Collection</h6>
+                            <div class="donation-details">
+                                <p class="mb-2">
+                                    <strong><span>📦</span>Quantity:</strong>
+                                    <span class="fw-bold" style="color: var(--accent-orange);">200 items</span>
+                                </p>
+                                <p class="mb-2">
+                                    <strong><span>📍</span>Target Area:</strong>
+                                    <span>Homeless Outreach</span>
+                                </p>
+                                <p class="mb-0">
+                                    <strong><span>👤</span>Donor:</strong>
+                                    <span>Community Center</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="status-badge bg-warning text-dark">
+                                    <span>⏳</span> Pending
+                                </span>
+                                <small style="color: var(--text-gray);">
+                                    <span>🕒</span> 09:45 AM
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Donation Summary -->
+            <div class="summary-card">
+                <h5 class="summary-title">
+                    <span>📊</span> Donation Impact Summary
+                </h5>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">15</span>
+                        <span class="stat-label">Total Donations</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Last 7 Days</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Financial</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">9</span>
+                        <span class="stat-label">Delivered</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Impact Message -->
+            <div class="impact-alert">
+                <h6 class="fw-bold mb-2" style="color: var(--white);">Together We're Making a Difference!</h6>
+                <p class="mb-0" style="color: var(--text-gray);">
+                    Your generosity has helped provide essential support to communities in need.
+                    <strong style="color: var(--accent-orange);">Every donation matters!</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for demonstration
+        const donations = [
+            {
+                type: "Money",
+                date: "Dec 15, 2023",
+                title: "Emergency Relief Fund",
+                quantity: "$500 USD",
+                area: "Flood Relief",
+                donor: "John Smith",
+                status: "Distributed",
+                time: "10:30 AM",
+                instructions: ""
+            },
+            {
+                type: "Food",
+                date: "Dec 12, 2023",
+                title: "Canned Goods and Non-Perishables",
+                quantity: "50 boxes",
+                area: "Local Shelter",
+                donor: "Sarah Johnson",
+                status: "Received",
+                time: "02:15 PM",
+                instructions: "Requires refrigeration for dairy items"
+            },
+            {
+                type: "Clothing",
+                date: "Dec 10, 2023",
+                title: "Winter Clothing Collection",
+                quantity: "200 items",
+                area: "Homeless Outreach",
+                donor: "Community Center",
+                status: "Pending",
+                time: "09:45 AM",
+                instructions: ""
+            }
+        ];
+
+        // Function to get donation type class
+        function getDonationTypeClass(type) {
+            switch(type.toLowerCase()) {
+                case "food": return "bg-warning text-dark";
+                case "clothing": return "bg-info text-white";
+                case "medical": return "bg-danger text-white";
+                case "money": return "bg-success text-white";
+                default: return "bg-secondary text-white";
+            }
+        }
+
+        // Function to get donation type icon
+        function getDonationTypeIcon(type) {
+            switch(type.toLowerCase()) {
+                case "food": return "🍽️";
+                case "clothing": return "👕";
+                case "medical": return "🏥";
+                case "money": return "💰";
+                default: return "🎁";
+            }
+        }
+
+        // Function to get status class
+        function getStatusClass(status) {
+            switch(status.toLowerCase()) {
+                case "pending": return "bg-warning text-dark";
+                case "received": return "bg-info text-white";
+                case "distributed": return "bg-success text-white";
+                case "cancelled": return "bg-danger text-white";
+                default: return "bg-secondary text-white";
+            }
+        }
+
+        // Function to get status icon
+        function getStatusIcon(status) {
+            switch(status.toLowerCase()) {
+                case "pending": return "⏳";
+                case "received": return "📦";
+                case "distributed": return "✅";
+                case "cancelled": return "❌";
+                default: return "❓";
+            }
+        }
+    </script>
+</body>
+</html>
